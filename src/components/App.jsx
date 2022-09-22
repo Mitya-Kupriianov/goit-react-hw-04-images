@@ -37,7 +37,7 @@ export function App() {
         }
 
         setIsLoading(false);
-        setImages([...images, ...hits]);
+        setImages(prevState => [...prevState, ...hits]);
       } catch (error) {
         setError(error.message);
         Notiflix.Notify.failure(`Error - ${error.message}`);
@@ -54,6 +54,7 @@ export function App() {
 
     if (query === '' || query === searchValue) {
       Notiflix.Notify.warning('Please, enter another search parameters');
+      event.target.reset();
       return;
     }
 

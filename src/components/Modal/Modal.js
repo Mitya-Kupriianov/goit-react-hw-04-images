@@ -4,18 +4,18 @@ import { useEffect } from 'react';
 
 export default function Modal({ handleClose, tags, largeImageURL }) {
   useEffect(() => {
+    const handleKeyDown = e => {
+      if (e.code === 'Escape') {
+        handleClose();
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
-
-  const handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      handleClose();
-    }
-  };
+  }, [handleClose]);
 
   const handleClick = e => {
     if (e.currentTarget === e.target) {
@@ -23,7 +23,6 @@ export default function Modal({ handleClose, tags, largeImageURL }) {
     }
   };
 
-  // const { tags, largeImageURL } = this.props;
   return (
     <div className={s.overlay} onClick={handleClick}>
       <div className={s.modal}>

@@ -18,34 +18,33 @@ export function App() {
     if (searchValue === '') {
       return;
     }
-    getImages();
-  }, [page, searchValue]);
+    const getImages = async () => {
+      setIsLoading(true);
+      try {
+        const {
+          data: { hits, totalHits },
+        } = await searchImages(searchValue, page);
 
-  const getImages = async () => {
-    setIsLoading(true);
-    try {
-      const {
-        data: { hits, totalHits },
-      } = await searchImages(searchValue, page);
+        if (page === 1) {
+          if (totalHits === 0) {
+            setIsLoading(false);
+            return Notiflix.Notify.failure('No results, try again');
+          }
 
-      if (page === 1) {
-        if (totalHits === 0) {
-          setIsLoading(false);
-          return Notiflix.Notify.failure('No results, try again');
+          Notiflix.Notify.success(`We found ${totalHits} images`);
+
+          setTotalHits(totalHits);
         }
 
-        Notiflix.Notify.success(`We found ${totalHits} images`);
-
-        setTotalHits(totalHits);
+        setIsLoading(false);
+        setImages([...images, ...hits]);
+      } catch (error) {
+        setError(error.message);
+        Notiflix.Notify.failure(`Error - ${error.message}`);
       }
-
-      setIsLoading(false);
-      setImages([...images, ...hits]);
-    } catch (error) {
-      setError(error.message);
-      Notiflix.Notify.failure(`Error - ${error.message}`);
-    }
-  };
+    };
+    getImages();
+  }, [images, page, searchValue]);
 
   const onSubmit = event => {
     event.preventDefault();

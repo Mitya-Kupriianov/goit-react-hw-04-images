@@ -18,7 +18,7 @@ export function App() {
     if (searchValue === '') {
       return;
     }
-    const getImages = async () => {
+    async function getImages() {
       setIsLoading(true);
       try {
         const {
@@ -42,16 +42,17 @@ export function App() {
         setError(error.message);
         Notiflix.Notify.failure(`Error - ${error.message}`);
       }
-    };
+    }
+
     getImages();
-  }, [images, page, searchValue]);
+  }, [page, searchValue]);
 
   const onSubmit = event => {
     event.preventDefault();
 
     const query = event.target.elements.query.value.trim().toLowerCase();
 
-    if (query === '') {
+    if (query === '' || query === searchValue) {
       Notiflix.Notify.warning('Please, enter another search parameters');
       return;
     }
